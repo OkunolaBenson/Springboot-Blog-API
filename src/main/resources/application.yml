@@ -1,3 +1,21 @@
 spring:
   application:
     name: Blog
+
+  datasource:
+    url: ${DBURL}
+    username: ${DBUSER}
+    password: ${DBPASS}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  config:
+    import: optional:file:.env[.properties]
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
