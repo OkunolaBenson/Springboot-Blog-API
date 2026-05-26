@@ -1,6 +1,16 @@
 @host  = http://localhost:8080
 @token = eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdtYWlsLmNvbSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzc3ODg0MTM2LCJleHAiOjE3Nzc4ODc3MzZ9.YeFpibVrSdG5I77YNVQz1ZZNaD-l86f77mriihlKObc
 
+### Super Admin Registration
+POST {{host}}/api/auth/super-admin/register
+Content-Type: application/json
+
+{
+  "name": "Super Admin2",
+  "email": "superadmin2@gmail.com",
+  "password": "123456"
+}
+
 ### Authentication
 ### Register
 POST {{host}}/api/auth/register
@@ -21,3 +31,9 @@ Authorization: Bearer {{token}}
   "email": "test@gmail.com",
   "password": "123456"
 }
+
+### Test
+GET {{host}}/test
+
+### Public Test
+GET {{host}}/public-test

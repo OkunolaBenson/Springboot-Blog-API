@@ -5,14 +5,16 @@ import com.example.blog.DTO.LoginRequest;
 import com.example.blog.DTO.RegisterRequest;
 import com.example.blog.services.AuthService;
 import jakarta.validation.Valid;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
+
     private final AuthService authService;
 
     @PostMapping("/register")
@@ -20,6 +22,12 @@ public class AuthController {
         return ResponseEntity.ok(authService.register(request));
     }
 
+    @PostMapping("/super-admin/register")
+    public ResponseEntity<AuthResponse> registerSuperAdmin(@Valid @RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(authService.registerSuperAdmin(request));
+    }
+
+    @PreAuthorize("hasRole('SUPER_ADMIN')")
     @PostMapping("/admin/register")
     public ResponseEntity<AuthResponse> registerAdmin(@Valid @RequestBody RegisterRequest request) {
         return ResponseEntity.ok(authService.registerAdmin(request));
@@ -30,14 +38,20 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));
     }
 
-    @PostMapping("/{refresh}")
-    public AuthResponse refreshToken(@RequestParam String refreshToken) {
-        return authService.refreshToken(refeshToken);
+    @PostMapping("/refresh")
+    public ResponseEntity<AuthResponse> refreshToken(@RequestParam String refreshToken) {
+        return ResponseEntity.ok(authService.refreshToken(refreshToken));
     }
 
-    @PostMapping("/{logout}")
-    public String logout(@RequestParam String refreshToken) {
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestParam String refreshToken) {
         authService.logout(refreshToken);
-        return "Logged Out Successfully";
+        return ResponseEntity.ok("Logged out successfully");
     }
+
+//    @GetMapping("/test")
+//    public String test() {
+//        return "WORKING";
+//    }
+
 }

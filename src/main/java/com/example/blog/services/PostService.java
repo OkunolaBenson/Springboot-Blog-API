@@ -26,10 +26,11 @@ import java.util.UUID;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final FileUploadService fileUploadService;
 
     public PostResponse createPost(PostRequest request, Long userId) {
         try {
-            String fileName = UUID.randomUUID() + "_" + request.getImage().getOriginalFilename();
+            String fileName = fileUploadService.uploadImage(request.getImage());
             Path path = Paths.get("uploads/" + fileName);
             Files.copy(request.getImage().getInputStream(), path);
             User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -94,7 +95,7 @@ public class PostService {
     }
     
     private String saveImage(PostRequest request) throws IOException {
-        String fileName = UUID.randomUUID() + "_" + request.getImage().getOriginalFilename();
+        String fileName = fileUploadService.uploadImage(request.getImage());
         Path path = Paths.get("uploads");
         if (!Files.exists(path)) {
             Files.createDirectories(path);
